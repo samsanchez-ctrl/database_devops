@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  db:
+    build: .
+    container_name: db_perritos
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql  # <-- la persistencia (IE3)
+    restart: always
+
+volumes:
+  db_data:                     # <-- Este volumen sobrevive aunque se borre el contenedor
