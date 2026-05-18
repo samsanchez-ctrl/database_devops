@@ -1,6 +1,6 @@
 FROM mysql:8.0
 
-# Variables básicas (el pipeline usará estas mismas). Mensaje para subir a deploy
+# Variables básicas (el pipeline usará estas mismas).
 ENV MYSQL_DATABASE=tienda_perritos
 ENV MYSQL_USER=alumno
 ENV MYSQL_PASSWORD=alumno123
