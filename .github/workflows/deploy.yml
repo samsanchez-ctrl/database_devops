@@ -13,7 +13,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: samsanchezctrl
+          username: samsanchez-ctrl
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push
@@ -21,7 +21,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: samsanchezctrl/db-perritos:latest
+          tags: samsanchez-ctrl/database_devops:latest
 
   deploy:
     needs: build-and-push
@@ -30,14 +30,19 @@ jobs:
       - name: Deploy to Private EC2 via SSH Proxy
         uses: appleboy/ssh-action@master
         with:
-          host: 10.0.159.53           # IP Privada Data
+          host: 10.0.153.106           # IP Privada Data
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          proxy_host: 18.209.107.114 # Uso el Frontend como puente igual que en el Backend
+          proxy_host: 10.0.137.129 # Uso el Backend como puente
           proxy_username: ec2-user
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo docker pull samsanchezctrl/db-perritos:latest
-            # Como usamos docker-compose en Data, ejecutamos:
-            sudo docker-compose down || true
-            sudo docker-compose up -d
+            sudo docker pull samsanchez-ctrl/database_devops:latest
+            sudo docker stop database_devops || true
+            sudo docker rm database_devops || true
+            sudo docker run -d --name database_devops -p 3306:3306 \
+              -e MYSQL_DATABASE=tienda_perritos \
+              -e MYSQL_USER=alumno \
+              -e MYSQL_PASSWORD=alumno123 \
+              -e MYSQL_ROOT_PASSWORD=root_password \
+              samsanchez-ctrl/database_devops:latest
