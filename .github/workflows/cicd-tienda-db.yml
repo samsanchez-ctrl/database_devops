@@ -26,7 +26,6 @@ jobs:
 
     - name: Build imagen DB y push a ECR
       run: |
-        cd database_devops
         docker build -t tienda-db .
         docker tag tienda-db:latest ${{ secrets.ECR_REPO_URL_DB }}:latest
         docker push ${{ secrets.ECR_REPO_URL_DB }}:latest
